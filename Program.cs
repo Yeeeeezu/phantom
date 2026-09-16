@@ -84,12 +84,16 @@ static class Program
 
         Console.WriteLine();
         Dim("  threads:");
-        foreach (ProcessThread t in p.Threads)
+        var threads = p.Threads.Cast<ProcessThread>().ToList();
+        int showMax = 20;
+        foreach (var t in threads.Take(showMax))
         {
             string state = t.ThreadState.ToString();
             string wait = t.ThreadState == System.Diagnostics.ThreadState.Wait ? $" ({t.WaitReason})" : "";
             Console.WriteLine($"    {t.Id,-8} {state}{wait}");
         }
+        if (threads.Count > showMax)
+            Dim($"    ... and {threads.Count - showMax} more");
     }
 
     static void ShowModules(string target)
